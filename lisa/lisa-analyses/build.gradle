@@ -5,5 +5,24 @@ dependencies {
 
 	// testing
 	testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.6'
-    testImplementation 'junit:junit:4.12'
+	testImplementation 'junit:junit:4.12'
+}
+
+ext {
+	apronPath='path/to/apron/folder'
+	excludeApronClass = !file(apronPath).exists()
+}
+
+task copyApronFiles (type: Copy) {
+	from apronPath+'/japron'
+	into './src/main/java/it/unive/lisa/apron'
+}
+
+if(excludeApronClass) {
+	sourceSets.main.java {
+		exclude '**/ApronDomain.java'
+	}
+}else{
+	compileJava.dependsOn(copyApronFiles)
+	sourcesJar.dependsOn(copyApronFiles)
 }

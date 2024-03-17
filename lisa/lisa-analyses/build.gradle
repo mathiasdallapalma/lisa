@@ -14,13 +14,13 @@ ext {
 }
 
 task copyApronFiles (type: Copy) {
-	from apronPath+'/japron'
+	from apronPath
 	into './src/main/java/it/unive/lisa/apron'
 }
 
 if(excludeApronClass) {
 	sourceSets.main.java {
-		exclude '**/ApronDomain.java'
+		exclude '**/Apron.java'
 	}
 }else{
 	compileJava.dependsOn(copyApronFiles)

@@ -1,6 +1,7 @@
 package it.unive.lisa.cron;
 
 import it.unive.lisa.AnalysisTestExecutor;
+import it.unive.lisa.Apron;
 import it.unive.lisa.CronConfiguration;
 import it.unive.lisa.DefaultConfiguration;
 import it.unive.lisa.analysis.nonRedundantSet.NonRedundantPowersetOfInterval;
@@ -14,6 +15,23 @@ import it.unive.lisa.conf.LiSAConfiguration.DescendingPhaseType;
 import org.junit.Test;
 
 public class NumericAnalysesTest extends AnalysisTestExecutor {
+
+	@Test
+	public void testSignApron() {
+		CronConfiguration conf = new CronConfiguration();
+		conf.serializeResults = true;
+		Apron apron=new Apron();
+		Apron.setManager(Apron.ApronDomain.Box);
+
+		conf.abstractState = DefaultConfiguration.simpleState(
+				DefaultConfiguration.defaultHeapDomain(),
+				new ValueEnvironment<>(new Sign()),
+				DefaultConfiguration.defaultTypeDomain());
+		conf.testDir = "numeric";
+		conf.testSubDir = "sign";
+		conf.programFile = "numeric.imp";
+		perform(conf);
+	}
 
 	@Test
 	public void testSign() {

@@ -9,94 +9,33 @@ import apron.PolkaEq;
 import apron.PplGrid;
 import apron.PplPoly;
 import apron.ApronException;
+import apron.Pplite;
+
 import it.unive.lisa.analysis.ScopeToken;
 import it.unive.lisa.analysis.SemanticException;
 import it.unive.lisa.analysis.SemanticOracle;
 import it.unive.lisa.analysis.lattices.Satisfiability;
 import it.unive.lisa.analysis.value.ValueDomain;
 import it.unive.lisa.program.cfg.ProgramPoint;
+import it.unive.lisa.symbolic.value.BinaryExpression;
 import it.unive.lisa.symbolic.value.Identifier;
+import it.unive.lisa.symbolic.value.UnaryExpression;
 import it.unive.lisa.symbolic.value.ValueExpression;
+import it.unive.lisa.util.representation.StringRepresentation;
 import it.unive.lisa.util.representation.StructuredRepresentation;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Predicate;
 
-
 public class Apron implements ValueDomain<Apron> {
-	static{System.setProperty( "java.library.path", "/home/met/Documents/GitHub/lisa/lisa/lisa-analyses/src/main/java/it/unive/lisa/apron/japron" );}
+
+	/* Set the Java library path to include the directory containing the Apron library SO file.*/
+	static{System.setProperty( "java.library.path", "./src/main/java/it/unive/lisa/apron/japron" );}
 
 	private static Manager manager;
+
 	final Abstract1 state;
-
-	@Override
-	public boolean lessOrEqual(Apron other) throws SemanticException {
-		return false;
-	}
-
-	@Override
-	public Apron lub(Apron other) throws SemanticException {
-		return null;
-	}
-
-	@Override
-	public Apron top() {
-		return null;
-	}
-
-	@Override
-	public Apron bottom() {
-		return null;
-	}
-
-	@Override
-	public Apron pushScope(ScopeToken token) throws SemanticException {
-		return null;
-	}
-
-	@Override
-	public Apron popScope(ScopeToken token) throws SemanticException {
-		return null;
-	}
-
-	@Override
-	public Apron assign(Identifier id, ValueExpression expression, ProgramPoint pp, SemanticOracle oracle) throws SemanticException {
-		return null;
-	}
-
-	@Override
-	public Apron smallStepSemantics(ValueExpression expression, ProgramPoint pp, SemanticOracle oracle) throws SemanticException {
-		return null;
-	}
-
-	@Override
-	public Apron assume(ValueExpression expression, ProgramPoint src, ProgramPoint dest, SemanticOracle oracle) throws SemanticException {
-		return null;
-	}
-
-	@Override
-	public boolean knowsIdentifier(Identifier id) {
-		return false;
-	}
-
-	@Override
-	public Apron forgetIdentifier(Identifier id) throws SemanticException {
-		return null;
-	}
-
-	@Override
-	public Apron forgetIdentifiersIf(Predicate<Identifier> test) throws SemanticException {
-		return null;
-	}
-
-	@Override
-	public Satisfiability satisfies(ValueExpression expression, ProgramPoint pp, SemanticOracle oracle) throws SemanticException {
-		return null;
-	}
-
-	@Override
-	public StructuredRepresentation representation() {
-		return null;
-	}
 
 	public enum ApronDomain {
 		/**
@@ -129,18 +68,11 @@ public class Apron implements ValueDomain<Apron> {
 		 * The Parma Polyhedra libraryconvex polyhedra domain
 		 * Compile Apron with the specific flag for PPL set to 1 in order to use such domain.
 		 */
-		PplPoly;
-	}
-	public static void setManager(ApronDomain numericalDomain) {
-		switch(numericalDomain) {
-			case Box: manager= new Box(); break;
-			case Octagon: manager=new Octagon(); break;
-			case Polka: manager=new Polka(false); break;
-			case PolkaEq: manager=new PolkaEq(); break;
-			case PplGrid: manager=new PplGrid(); break;
-			case PplPoly: manager=new PplPoly(false); break;
-			default: throw new UnsupportedOperationException("Numerical domain "+numericalDomain+" unknown in Apron");
-		}
+		PplPoly,
+		/**
+		 * PPLite
+		 */
+		PPLite;
 	}
 
 	public Apron() {
@@ -152,9 +84,112 @@ public class Apron implements ValueDomain<Apron> {
 			throw new UnsupportedOperationException("Apron library crashed", e);
 		}
 	}
-	Apron(Abstract1 state) {
+	public Apron(Abstract1 state) {
 		this.state = state;
 	}
+
+	@Override
+	public boolean lessOrEqual(Apron other) throws SemanticException {
+		return true;
+	}
+
+	@Override
+	public Apron lub(Apron other) throws SemanticException {
+		return top();
+	}
+
+	@Override
+	public Apron top() {
+		try {
+			return new Apron(new Abstract1(manager, new apron.Environment()));
+		} catch (ApronException e) {
+			throw new UnsupportedOperationException("Apron library crashed", e);
+		}
+	}
+
+	@Override
+	public Apron bottom() {
+		try {
+			return new Apron(new Abstract1(manager, new apron.Environment(), true));
+		} catch (ApronException e) {
+			throw new UnsupportedOperationException("Apron library crashed", e);
+		}
+	}
+
+	@Override
+	public Apron pushScope(ScopeToken token) throws SemanticException {
+		
+		return top();
+	}
+
+	@Override
+	public Apron popScope(ScopeToken token) throws SemanticException {
+		return top();
+	}
+
+	@Override
+	public Apron assign(Identifier id, ValueExpression expression, ProgramPoint pp, SemanticOracle oracle) throws SemanticException {
+		return top();
+	}
+
+	@Override
+	public Apron smallStepSemantics(ValueExpression expression, ProgramPoint pp, SemanticOracle oracle) throws SemanticException {
+		return top();
+	}
+
+	@Override
+	public Apron assume(ValueExpression expression, ProgramPoint src, ProgramPoint dest, SemanticOracle oracle) throws SemanticException {
+		return top();
+	}
+
+	@Override
+	public boolean knowsIdentifier(Identifier id) {
+		return true;
+	}
+
+	@Override
+	public Apron forgetIdentifier(Identifier id) throws SemanticException {
+		return top();
+	}
+
+	@Override
+	public Apron forgetIdentifiersIf(Predicate<Identifier> test) throws SemanticException {
+		return top();
+	}
+
+	@Override
+	public Satisfiability satisfies(ValueExpression expression, ProgramPoint pp, SemanticOracle oracle) throws SemanticException {
+		return Satisfiability.UNKNOWN;
+	}
+
+	@Override
+	public StructuredRepresentation representation() {
+		return new StringRepresentation("TOP_APRON");
+	}
+
+	@Override
+	public boolean isBottom() {
+		return equals(bottom());
+	}
+
+	@Override
+	public boolean isTop() {
+		return equals(top());
+	}
+
+	public static void setManager(ApronDomain numericalDomain) {
+		switch(numericalDomain) {
+			case Box: manager= new apron.Box(); break;
+			case Octagon: manager=new Octagon(); break;
+			case Polka: manager=new Polka(false); break;
+			case PolkaEq: manager=new PolkaEq(); break;
+			case PplGrid: manager=new PplGrid(); break;
+			case PplPoly: manager=new PplPoly(false); break;
+			case PPLite: manager=new Pplite(true); break;
+			default: throw new UnsupportedOperationException("Numerical domain "+numericalDomain+" unknown in Apron");
+		}
+	}
+
 
 
 }

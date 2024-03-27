@@ -9,7 +9,7 @@ dependencies {
 }
 
 ext {
-	apronPath='path/to/apron/folder'
+	apronPath=System.getenv("apronPath")
 	excludeApronClass = !file(apronPath).exists()
 }
 

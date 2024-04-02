@@ -1,29 +1,66 @@
 package it.unive.lisa.cron;
 
 import it.unive.lisa.AnalysisTestExecutor;
-
+import it.unive.lisa.Apron;
 import it.unive.lisa.CronConfiguration;
 import it.unive.lisa.DefaultConfiguration;
 import it.unive.lisa.analysis.nonRedundantSet.NonRedundantPowersetOfInterval;
 import it.unive.lisa.analysis.nonrelational.value.ValueEnvironment;
-import it.unive.lisa.analysis.numeric.IntegerConstantPropagation;
-import it.unive.lisa.analysis.numeric.Interval;
-import it.unive.lisa.analysis.numeric.Parity;
-import it.unive.lisa.analysis.numeric.Pentagon;
-import it.unive.lisa.analysis.numeric.Sign;
+import it.unive.lisa.analysis.numeric.*;
 import it.unive.lisa.conf.LiSAConfiguration;
 import it.unive.lisa.conf.LiSAConfiguration.DescendingPhaseType;
 import org.junit.Test;
 
-public class NumericAnalysesTest extends AnalysisTestExecutor {
+public class NumericAnalysesTestApron extends AnalysisTestExecutor {
+
 
 	@Test
-	public void testSign() {
+	public void testSignPPLite() {
 		CronConfiguration conf = new CronConfiguration();
 		conf.serializeResults = true;
+		Apron.setManager(Apron.ApronDomain.PPLite);
+		Apron apron=new Apron();
+
+		conf.analysisGraphs= LiSAConfiguration.GraphType.DOT;
 		conf.abstractState = DefaultConfiguration.simpleState(
 				DefaultConfiguration.defaultHeapDomain(),
-				new ValueEnvironment<>(new Sign()),
+				apron,
+				DefaultConfiguration.defaultTypeDomain());
+		conf.testDir = "numeric";
+		conf.testSubDir = "sign.PPLite";
+		conf.programFile = "numeric.imp";
+		perform(conf);
+	}
+
+	@Test
+	public void testSignBox() {
+		CronConfiguration conf = new CronConfiguration();
+		conf.serializeResults = true;
+		Apron.setManager(Apron.ApronDomain.Box);
+		Apron apron=new Apron();
+
+		conf.analysisGraphs= LiSAConfiguration.GraphType.DOT;
+		conf.abstractState = DefaultConfiguration.simpleState(
+				DefaultConfiguration.defaultHeapDomain(),
+				apron,
+				DefaultConfiguration.defaultTypeDomain());
+		conf.testDir = "numericApron";
+		conf.testSubDir = "sign";
+		conf.programFile = "numeric.imp";
+		perform(conf);
+	}
+
+	@Test
+	public void testSignOctagon() {
+		CronConfiguration conf = new CronConfiguration();
+		conf.serializeResults = true;
+		Apron.setManager(Apron.ApronDomain.Octagon);
+		Apron apron=new Apron();
+
+		conf.analysisGraphs= LiSAConfiguration.GraphType.DOT;
+		conf.abstractState = DefaultConfiguration.simpleState(
+				DefaultConfiguration.defaultHeapDomain(),
+				apron,
 				DefaultConfiguration.defaultTypeDomain());
 		conf.testDir = "numeric";
 		conf.testSubDir = "sign";
@@ -32,79 +69,78 @@ public class NumericAnalysesTest extends AnalysisTestExecutor {
 	}
 
 	@Test
-	public void testParity() {
+	public void testSignPolka() {
 		CronConfiguration conf = new CronConfiguration();
 		conf.serializeResults = true;
+		Apron.setManager(Apron.ApronDomain.Polka);
+		Apron apron=new Apron();
+
+		conf.analysisGraphs= LiSAConfiguration.GraphType.DOT;
 		conf.abstractState = DefaultConfiguration.simpleState(
 				DefaultConfiguration.defaultHeapDomain(),
-				new ValueEnvironment<>(new Parity()),
+				apron,
 				DefaultConfiguration.defaultTypeDomain());
 		conf.testDir = "numeric";
-		conf.testSubDir = "parity";
+		conf.testSubDir = "sign";
 		conf.programFile = "numeric.imp";
 		perform(conf);
 	}
 
 	@Test
-	public void testInterval() {
+	public void testSignPolkaEq() {
 		CronConfiguration conf = new CronConfiguration();
 		conf.serializeResults = true;
+		Apron.setManager(Apron.ApronDomain.PolkaEq);
+		Apron apron=new Apron();
+
+		conf.analysisGraphs= LiSAConfiguration.GraphType.DOT;
 		conf.abstractState = DefaultConfiguration.simpleState(
 				DefaultConfiguration.defaultHeapDomain(),
-				new ValueEnvironment<>(new Interval()),
+				apron,
 				DefaultConfiguration.defaultTypeDomain());
 		conf.testDir = "numeric";
-		conf.testSubDir = "interval";
+		conf.testSubDir = "sign";
 		conf.programFile = "numeric.imp";
 		perform(conf);
 	}
 
+	/*
 	@Test
-	public void testIntegerConstantPropagation() {
+	public void testSignPplGrid() {
 		CronConfiguration conf = new CronConfiguration();
 		conf.serializeResults = true;
+		Apron.setManager(Apron.ApronDomain.PplGrid);
+		Apron apron=new Apron();
+
+		conf.analysisGraphs= LiSAConfiguration.GraphType.DOT;
 		conf.abstractState = DefaultConfiguration.simpleState(
 				DefaultConfiguration.defaultHeapDomain(),
-				new ValueEnvironment<>(new IntegerConstantPropagation()),
+				apron,
 				DefaultConfiguration.defaultTypeDomain());
 		conf.testDir = "numeric";
-		conf.testSubDir = "int-const";
+		conf.testSubDir = "sign";
 		conf.programFile = "numeric.imp";
 		perform(conf);
 	}
+	*/
 
+	/*
 	@Test
-	public void testNonRedundantSetOfInterval() {
+	public void testSignPplPoly() {
 		CronConfiguration conf = new CronConfiguration();
 		conf.serializeResults = true;
+		Apron.setManager(Apron.ApronDomain.PplPoly);
+		Apron apron=new Apron();
+
+		conf.analysisGraphs= LiSAConfiguration.GraphType.DOT;
 		conf.abstractState = DefaultConfiguration.simpleState(
 				DefaultConfiguration.defaultHeapDomain(),
-				new ValueEnvironment<>(new NonRedundantPowersetOfInterval()),
+				apron,
 				DefaultConfiguration.defaultTypeDomain());
 		conf.testDir = "numeric";
-		conf.testSubDir = "interval-set";
+		conf.testSubDir = "sign";
 		conf.programFile = "numeric.imp";
-		conf.descendingPhaseType = DescendingPhaseType.GLB;
-		conf.glbThreshold = 5;
-		// there seem to be one less round of redundancy removal
-		// that avoid compacting two elements into a single one when running an
-		// optimized analysis. the result is still sound and more precice
-		// however.
-		conf.compareWithOptimization = false;
 		perform(conf);
 	}
-
-	@Test
-	public void testPentagons() {
-		CronConfiguration conf = new CronConfiguration();
-		conf.serializeResults = true;
-		conf.abstractState = DefaultConfiguration.simpleState(
-				DefaultConfiguration.defaultHeapDomain(),
-				new Pentagon(),
-				DefaultConfiguration.defaultTypeDomain());
-		conf.testDir = "numeric";
-		conf.testSubDir = "pentagons";
-		conf.programFile = "pentagons.imp";
-		perform(conf);
-	}
+	*/
 }

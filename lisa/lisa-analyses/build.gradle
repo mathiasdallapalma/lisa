@@ -21,6 +21,7 @@ task copyApronFiles (type: Copy) {
 if(excludeApronClass) {
 	sourceSets.main.java {
 		exclude '**/Apron.java'
+		exclude '**/NumericAnalysesTestApron.java'
 	}
 }else{
 	compileJava.dependsOn(copyApronFiles)

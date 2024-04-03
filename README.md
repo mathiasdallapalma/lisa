@@ -31,3 +31,33 @@ Head to the [Releases](https://github.com/lisa-analyzer/lisa/releases) page for 
 ### Snapshots
 
 The snapshot of the last commit of the `master` branch is always available on [GitHub Packages](https://github.com/orgs/lisa-analyzer/packages?repo_name=lisa). Be aware that you will need a personal access token to use packages as server for resolving dependencies. You can refer to the official GitHub guide for [Maven](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#authenticating-to-github-packages) or [Gradle](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#authenticating-to-github-packages) for more information.
+
+### Apron Configuration
+
+Apron is a separate tool that needs to be installed separately for Lisa to recognize it. Here's how to set it up:
+
+1. Set the Environment Variable:
+
+You'll need to define an environment variable called **APRON_PATH** that points to the root directory where Apron is installed.
+
+There are two ways to do this:
+
+* a) Using the Command Line:
+
+Open a terminal window and type the following command, replacing <path_to_apron> with the actual location of your Apron installation:
+
+`export APRON_PATH=<path_to_apron>`
+
+* b) Using an IDE:
+
+If you're using an IDE like IntelliJ IDEA, you can set environment variables within the IDE itself. Here's a general guideline (consult your IDE's documentation for specific instructions):
+
+Go to Run > Edit Configurations (or Settings depending on your IDE).\
+Look for a section related to Run Configurations or Environment Variables.\
+Add a new variable named **APRON_PATH** and set its value to the path of your Apron installation.
+
+Depending on your operating system, you might also need to set the paths for the dipendencies that Apron relies on. A quick solution for experienced Linux users is to add the directories containing the required libraries to the /etc/ld.so.conf file. This allows the system linker to search for libraries in those locations.
+
+2. Building the Project:
+
+Once the environment variable is set, you can build your project as usual.

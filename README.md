@@ -44,19 +44,19 @@ There are two ways to do this:
 
 * a) Using the Command Line:
 
-Open a terminal window and type the following command, replacing <path_to_apron> with the actual location of your Apron installation:
+  Open a terminal window and type the following command, replacing <path_to_apron> with the actual location of your Apron installation:
 
-`export APRON_PATH=<path_to_apron>`
+  `export APRON_PATH=<path_to_apron>`
 
 * b) Using an IDE:
 
-If you're using an IDE like IntelliJ IDEA, you can set environment variables within the IDE itself. Here's a general guideline (consult your IDE's documentation for specific instructions):
+  If you're using an IDE like IntelliJ IDEA, you can set environment variables within the IDE itself. Here's a general guideline (consult your IDE's documentation for specific instructions):
 
-Go to Run > Edit Configurations (or Settings depending on your IDE).\
-Look for a section related to Run Configurations or Environment Variables.\
-Add a new variable named **APRON_PATH** and set its value to the path of your Apron installation.
+  Go to Run > Edit Configurations (or Settings depending on your IDE).\
+  Look for a section related to Run Configurations or Environment Variables.\
+  Add a new variable named **APRON_PATH** and set its value to the path of your Apron installation.
 
-Depending on your operating system, you might also need to set the paths for the dipendencies that Apron relies on. A quick solution for experienced Linux users is to add the directories containing the required libraries to the /etc/ld.so.conf file. This allows the system linker to search for libraries in those locations.
+Depending on your operating system, you might also need to set the paths for the dipendencies that Apron relies on. A quick solution for experienced Linux users is to add the directories containing the required libraries to the `/etc/ld.so.conf` file. This allows the system linker to search for libraries in those locations.
 
 2. Building the Project:
 

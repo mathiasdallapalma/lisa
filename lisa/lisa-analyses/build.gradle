@@ -9,19 +9,32 @@ dependencies {
 }
 
 ext {
-	apronPath=System.getenv("APRON_PATH")
+	apronPath = System.getenv("APRON_PATH")==null?"*":System.getenv("APRON_PATH")
+	
 	excludeApronClass = !file(apronPath).exists()
+	
 }
 
-task copyApronFiles (type: Copy) {
+task copyApronFiles(type: Copy) {
 	from apronPath
 	into './src/main/java/it/unive/lisa/apron'
+	onlyIf {
+		System.env['APRON_PATH'] != null
+	}
 }
 
 if(excludeApronClass) {
-	sourceSets.main.java {
-		exclude '**/Apron.java'
-		exclude '**/NumericAnalysesTestApron.java'
+	sourceSets {
+		main {
+			java {
+				exclude '**/Apron.java'
+			}
+		}
+		test {
+			java {
+				exclude '**/NumericAnalysesTestApron.java'
+			}
+		}
 	}
 }else{
 	compileJava.dependsOn(copyApronFiles)
